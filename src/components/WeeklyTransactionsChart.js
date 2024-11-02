@@ -1,5 +1,4 @@
 // src/components/WeeklyTransactionsChart.js
-
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -37,17 +36,17 @@ const WeeklyTransactionsChart = () => {
         for (const chain of chainsWithExplorer) {
           try {
             // Get the date range
-            const oneYearAgo = DateTime.now().minus({ years: 1 }).toISODate();
+            const oneMonthAgo = DateTime.now().minus({ months: 1 }).toISODate();
             const today = DateTime.now().toISODate();
 
             // Fetch the transaction data
             const chartsResponse = await fetch(
-              `${chain.blockExplorerUrl}/api/v2/stats/charts/transactions?from=${oneYearAgo}&to=${today}`
+              `${chain.blockExplorerUrl}/api/v2/stats/charts/transactions?from=${oneMonthAgo}&to=${today}`
             );
             const chartsData = await chartsResponse.json();
 
             const chainData = chartsData.chart_data.map((dataPoint) => ({
-              date: DateTime.fromISO(dataPoint.date).startOf("day"),
+              date: DateTime.fromISO(dataPoint.date).startOf("day").toJSDate(),
               tx_count: dataPoint.tx_count,
               chain: chain.name,
             }));
@@ -66,18 +65,20 @@ const WeeklyTransactionsChart = () => {
           return;
         }
 
-        // Filter data from the last year
-        const oneYearAgo = DateTime.now().minus({ years: 1 });
+        // Filter data from the last month
+        const oneMonthAgo = DateTime.now().minus({ months: 1 }).toJSDate();
         const filteredData = allTransactionData.filter(
-          (dataPoint) => dataPoint.date >= oneYearAgo
+          (dataPoint) => dataPoint.date >= oneMonthAgo
         );
 
         // Aggregate daily data into weekly totals
         const weeklyTotals = {};
 
         filteredData.forEach((dataPoint) => {
-          const weekStart = dataPoint.date.startOf("week");
-          const key = weekStart.toISODate();
+          const weekStart = DateTime.fromJSDate(dataPoint.date)
+            .startOf("week")
+            .toISODate();
+          const key = weekStart;
 
           if (!weeklyTotals[key]) {
             weeklyTotals[key] = 0;
@@ -96,8 +97,8 @@ const WeeklyTransactionsChart = () => {
             {
               label: "Weekly Total Transactions",
               data,
-              backgroundColor: "rgba(255, 59, 87, 0.6)", // Updated to FF3B57 with 60% opacity
-              borderColor: "rgba(255, 59, 87, 1)", // Updated to FF3B57 with full opacity
+              backgroundColor: "rgba(255, 59, 87, 0.6)", // FF3B57 with opacity
+              borderColor: "rgba(255, 59, 87, 1)", // FF3B57 solid
               borderWidth: 1,
             },
           ],
@@ -119,7 +120,7 @@ const WeeklyTransactionsChart = () => {
 
   return (
     <div className="weekly-transactions-chart">
-      <h2>Weekly Total Transactions (1 Month)</h2>
+      <h2>Weekly Total Transactions (Last Month)</h2>
       {chartData ? (
         <Bar
           data={chartData}
@@ -132,7 +133,7 @@ const WeeklyTransactionsChart = () => {
                   unit: "week",
                   tooltipFormat: "MMM dd, yyyy",
                   displayFormats: {
-                    week: "MMM dd, yyyy",
+                    week: "MMM dd",
                   },
                 },
                 title: {

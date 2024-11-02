@@ -1,4 +1,4 @@
-// Table.js
+// src/components/Table.js
 import React, { useState, useEffect } from "react";
 import {
   fetchGoogleSheetData,
@@ -57,16 +57,22 @@ const Table = () => {
     const getData = async () => {
       try {
         const initialData = await fetchGoogleSheetData();
-        setSheetData(initialData);
+        const enrichedData = await Promise.all(
+          initialData.map(async (row) => {
+            const updatedRow = await fetchBlockExplorerData(row);
+            return updatedRow;
+          })
+        );
+        setSheetData(enrichedData);
 
-        const rollups = [...new Set(initialData.map((row) => row.name))];
+        const rollups = [...new Set(enrichedData.map((row) => row.name))];
         const frameworks = [
-          ...new Set(initialData.map((row) => row.framework)),
+          ...new Set(enrichedData.map((row) => row.framework)),
         ];
-        const das = [...new Set(initialData.map((row) => row.da))];
-        const verticals = [...new Set(initialData.map((row) => row.vertical))];
-        const raasProviders = [...new Set(initialData.map((row) => row.raas))];
-        const l2OrL3 = [...new Set(initialData.map((row) => row.l2OrL3))];
+        const das = [...new Set(enrichedData.map((row) => row.da))];
+        const verticals = [...new Set(enrichedData.map((row) => row.vertical))];
+        const raasProviders = [...new Set(enrichedData.map((row) => row.raas))];
+        const l2OrL3 = [...new Set(enrichedData.map((row) => row.l2OrL3))];
 
         setUniqueOptions({
           rollups,
@@ -76,14 +82,6 @@ const Table = () => {
           raasProviders,
           l2OrL3,
         });
-
-        const updatedData = await Promise.all(
-          initialData.map(async (row) => {
-            const updatedRow = await fetchBlockExplorerData(row);
-            return updatedRow;
-          })
-        );
-        setSheetData(updatedData);
 
         setLoading(false);
         setError(null);

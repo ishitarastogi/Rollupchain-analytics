@@ -1,0 +1,101 @@
+/* src/pages/VerticalsPage.css */
+
+.verticals-page {
+  padding: 20px;
+  color: #fff; /* Text color */
+  min-height: 100vh;
+  font-family: Arial, sans-serif; /* Adjust as needed */
+}
+
+.verticals-page h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+}
+
+.verticals-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+}
+
+/* Removed background-color, padding, border-radius, and box-shadow */
+.verticals-table-container,
+.verticals-pie-chart-container {
+  flex: 1 1 400px; /* Responsive sizing */
+  max-width: 600px;
+}
+
+/* Centered headings */
+.verticals-table-container h3,
+.verticals-pie-chart-container h3 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+/* Removed table background and borders */
+.verticals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-left: 20px;
+}
+
+.verticals-table th,
+.verticals-table td {
+  padding: 12px 15px;
+  text-align: left;
+  /* Removed border-bottom */
+}
+
+.verticals-table th {
+  /* Removed background-color */
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-top: 50px;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+/* Pie Chart Container */
+.verticals-pie-chart-container {
+  /* No background-color, padding, border-radius, or box-shadow */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .verticals-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .verticals-table-container,
+  .verticals-pie-chart-container {
+    max-width: 100%;
+  }
+
+  .verticals-table-container h3,
+  .verticals-pie-chart-container h3 {
+    font-size: 1.5rem;
+  }
+
+  .verticals-table th,
+  .verticals-table td {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+}
