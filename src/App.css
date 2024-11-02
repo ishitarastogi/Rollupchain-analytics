@@ -1,0 +1,44 @@
+/* src/App.css */
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+  margin: 0; /* Remove default margin */
+}
+
+.app {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+}
+
+.sidebar {
+  width: 200px; /* Width of the sidebar */
+  background-color: #1f1f1f; /* Sidebar color */
+  color: #fff;
+  /* Additional sidebar styles as needed */
+}
+
+.main-content {
+  margin-left: 200px; /* Width of the sidebar */
+  padding: 20px 40px; /* Adjusted padding for consistency */
+  flex: 1;
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+}
+
+button,
+select {
+  background-color: #444; /* Dark gray background */
+  color: #fff; /* White text */
+  border: none;
+  padding: 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover,
+select:hover {
+  background-color: #fff; /* White background on hover */
+  color: #000; /* Black text on hover */
+}

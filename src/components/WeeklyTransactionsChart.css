@@ -1,0 +1,14 @@
+/* WeeklyTransactionsChart.css */
+.weekly-transactions-chart {
+  margin-left: 40px;
+}
+
+.weekly-transactions-chart h2 {
+  text-align: center;
+  color: #ff3b57;
+  margin-bottom: 20px;
+}
+
+.weekly-transactions-chart canvas {
+  max-width: 90%;
+}

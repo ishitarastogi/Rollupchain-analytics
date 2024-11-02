@@ -1,0 +1,123 @@
+/* src/components/FilterBar.css */
+
+.filter-bar {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  padding: 20px;
+  background-color: #1a1a1a; /* Lighter shade of black for the filter bar */
+  border-radius: 8px;
+  margin-bottom: 20px;
+  margin-right: 90px;
+  margin-left: 50px;
+}
+
+.filter-dropdowns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 15px; /* Space between dropdowns and actions */
+}
+
+.filter-dropdowns select {
+  padding: 10px 15px;
+  border: none;
+  background-color: #444; /* Dark gray background */
+  color: #fff; /* White text */
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 150px; /* Ensures consistent width */
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.filter-dropdowns select:hover {
+  background-color: #555; /* Slightly lighter gray on hover */
+}
+
+.filter-actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.date-range {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.date-range button {
+  padding: 8px 12px;
+  border: 2px solid #444; /* Dark gray border */
+  background-color: transparent; /* Transparent background */
+  color: #fff; /* White text */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.date-range button:hover {
+  background-color: #fff; /* White background on hover */
+  color: #000; /* Black text on hover */
+}
+
+.date-range button.active {
+  background-color: #fff; /* White background for active state */
+  color: #000; /* Black text for active state */
+  border-color: #fff; /* White border for active state */
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px; /* Space for smaller screens */
+}
+
+.reset-button,
+.columns-button {
+  padding: 8px 12px;
+  border: 1px solid #fff; /* White border */
+  background-color: transparent; /* Transparent background */
+  color: #fff; /* White text */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.reset-button:hover,
+.columns-button:hover {
+  background-color: #fff; /* White background on hover */
+  color: #000; /* Black text on hover */
+}
+
+.columns-button svg {
+  margin-right: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .filter-dropdowns {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-actions-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
+  .columns-button {
+    justify-content: center;
+  }
+}
