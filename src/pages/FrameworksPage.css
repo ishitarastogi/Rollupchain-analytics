@@ -1,6 +1,6 @@
-/* src/pages/VerticalsPage.css */
+/* src/pages/FrameworksPage.css */
 
-.verticals-page {
+.frameworks-page {
   padding: 20px;
   background-color: #000; /* Main background color */
   color: #fff; /* Text color */
@@ -8,14 +8,14 @@
   font-family: Arial, sans-serif; /* Adjust as needed */
 }
 
-.verticals-page h2 {
+.frameworks-page h2 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 2.5rem;
   letter-spacing: 2px;
 }
 
-.verticals-container {
+.frameworks-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px; /* Reduced gap for tighter spacing */
@@ -24,63 +24,62 @@
 }
 
 /* Table Container */
-.verticals-table-container {
+.frameworks-table-container {
   flex: 2 1 500px; /* Allows the table to take up more space */
   max-width: 600px; /* Increased max-width for better visibility */
 }
 
 /* Pie Chart Container */
-.verticals-pie-chart-container {
+.frameworks-pie-chart-container {
   flex: 1 1 250px; /* Allows the pie chart to take up less space */
   max-width: 600px; /* Set a fixed max-width to control size */
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -40px; /* Pulls the pie chart up */
-  margin-left: 60px;
 }
 
 /* Centered Headings */
-.verticals-table-container h3,
-.verticals-bar-chart-container h3 {
+.frameworks-table-container h3,
+.frameworks-bar-chart-container h3 {
   margin-bottom: 10px; /* Reduced margin to decrease gap before the chart */
   font-size: 1.8rem;
   letter-spacing: 1px;
   text-align: center;
 }
-.verticals-pie-chart-container h3 {
-  margin-top: 70px; /* Reduced margin to decrease gap before the chart */
+
+.frameworks-pie-chart-container h3 {
+  margin-bottom: 10px; /* Reduced margin to decrease gap before the chart */
   font-size: 1.8rem;
   letter-spacing: 1px;
   text-align: center;
 }
 
 /* Table Styling */
-.verticals-table {
+.frameworks-table {
   width: 100%;
   border-collapse: collapse; /* Removes space between cells */
   color: #fff; /* Ensure text is visible on dark background */
 }
 
-.verticals-table th,
-.verticals-table td {
+.frameworks-table th,
+.frameworks-table td {
   padding: 12px 15px;
   text-align: left;
   /* No borders */
 }
 
-.verticals-table th {
+.frameworks-table th {
   font-size: 1.1rem;
   letter-spacing: 1px;
   border-bottom: 1px solid #444; /* Subtle bottom border */
 }
 
-.verticals-table tr:hover {
+.frameworks-table tr:hover {
   background-color: #1a1a1a; /* Slight hover effect */
 }
 
 /* Bar Charts Grid: 2x2 Layout */
-.verticals-bar-charts-grid {
+.frameworks-bar-charts-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 40px;
@@ -88,24 +87,24 @@
 }
 
 /* Bar Chart Containers */
-.verticals-bar-chart-container {
+.frameworks-bar-chart-container {
   background-color: #1a1a1a; /* Optional: Add background for better contrast */
   padding: 20px;
   border-radius: 8px;
 }
 
 /* Styling for the Bar Charts */
-.verticals-bar-chart-container canvas {
+.frameworks-bar-chart-container canvas {
   width: 100% !important;
   height: auto !important;
 }
 
 /* Pie Chart Styling */
-.verticals-pie-chart-container canvas {
+.frameworks-pie-chart-container canvas {
   width: 100% !important;
   height: auto !important;
-  max-width: 450px; /* Further control the pie chart size */
-  margin-bottom: -10px; /* Reduce gap between pie chart and labels */
+  max-width: 350px; /* Further control the pie chart size */
+  margin-bottom: 20px; /* Reduce gap between pie chart and labels */
 }
 
 /* Loading and Error Messages */
@@ -144,40 +143,40 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .verticals-bar-charts-grid {
+  .frameworks-bar-charts-grid {
     grid-template-columns: 1fr 1fr; /* Maintain 2 columns on medium screens */
   }
 }
 
 @media (max-width: 768px) {
-  .verticals-container {
+  .frameworks-container {
     flex-direction: column;
     align-items: center;
   }
 
-  .verticals-table-container,
-  .verticals-pie-chart-container,
-  .verticals-bar-chart-container {
+  .frameworks-table-container,
+  .frameworks-pie-chart-container,
+  .frameworks-bar-chart-container {
     max-width: 100%;
   }
 
-  .verticals-table-container h3,
-  .verticals-pie-chart-container h3,
-  .verticals-bar-chart-container h3 {
+  .frameworks-table-container h3,
+  .frameworks-pie-chart-container h3,
+  .frameworks-bar-chart-container h3 {
     font-size: 1.5rem;
   }
 
-  .verticals-table th,
-  .verticals-table td {
+  .frameworks-table th,
+  .frameworks-table td {
     padding: 10px 12px;
     font-size: 0.9rem;
   }
 
-  .verticals-bar-charts-grid {
+  .frameworks-bar-charts-grid {
     grid-template-columns: 1fr; /* Stack charts vertically on small screens */
   }
 
-  .verticals-bar-chart-container {
+  .frameworks-bar-chart-container {
     margin-top: 30px;
   }
 

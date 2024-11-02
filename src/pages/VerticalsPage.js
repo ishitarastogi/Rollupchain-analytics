@@ -1,7 +1,7 @@
 // src/pages/VerticalsPage.js
 
 import React, { useEffect, useState } from "react";
-import { Pie, Bar } from "react-chartjs-2"; // Import Pie and Bar from react-chartjs-2
+import { Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -10,7 +10,7 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-} from "chart.js"; // Import necessary components from chart.js
+} from "chart.js";
 import { fetchGoogleSheetData } from "../services/fetchGoogleSheetData";
 import "./VerticalsPage.css";
 
@@ -29,6 +29,9 @@ const VerticalsPage = () => {
   const [barChartData, setBarChartData] = useState({});
   const [daChartData, setDaChartData] = useState({});
   const [l2l3ChartData, setL2l3ChartData] = useState({});
+  const [verticalsFrameworksBarData, setVerticalsFrameworksBarData] = useState(
+    {}
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -46,28 +49,35 @@ const VerticalsPage = () => {
         const verticalsMap = {};
 
         filteredData.forEach((chain) => {
-          const vertical = chain.vertical.trim();
-          if (!verticalsMap[vertical]) {
-            verticalsMap[vertical] = [];
-          }
-          verticalsMap[vertical].push({
-            name: chain.name,
-            da: chain.da
-              .split(",")
-              .map((item) => item.trim())
-              .filter((item) => item !== "--"),
-            l2OrL3: chain.l2OrL3
-              .split(",")
-              .map((item) => item.trim())
-              .filter((item) => item !== "--"),
-            totalTransactions:
-              chain.totalTransactions === "--"
-                ? 0
-                : Number(chain.totalTransactions),
+          const verticals = chain.vertical
+            .split(",")
+            .map((v) => v.trim())
+            .filter((v) => v !== "--");
+
+          verticals.forEach((vertical) => {
+            if (!verticalsMap[vertical]) {
+              verticalsMap[vertical] = [];
+            }
+            verticalsMap[vertical].push({
+              name: chain.name,
+              framework: chain.framework ? chain.framework.trim() : "N/A",
+              da: chain.da
+                .split(",")
+                .map((item) => item.trim())
+                .filter((item) => item !== "--"),
+              l2OrL3: chain.l2OrL3
+                .split(",")
+                .map((item) => item.trim())
+                .filter((item) => item !== "--"),
+              totalTransactions:
+                chain.totalTransactions === "--"
+                  ? 0
+                  : Number(chain.totalTransactions),
+            });
           });
         });
 
-        // Prepare data for table and bar chart
+        // Prepare data for table and pie chart
         const verticalsArray = Object.keys(verticalsMap).map((vertical) => {
           // Sort chains by totalTransactions in descending order and take top 5
           const topChains = verticalsMap[vertical]
@@ -112,8 +122,8 @@ const VerticalsPage = () => {
             {
               label: "Total Transactions",
               data: verticalsArray.map((v) => v.totalTransactions),
-              backgroundColor: "rgba(54, 162, 235, 0.6)", // Blue with opacity
-              borderColor: "rgba(54, 162, 235, 1)", // Blue solid
+              backgroundColor: "rgba(255, 99, 132, 0.6)",
+              borderColor: "rgba(255, 99, 132, 1)",
               borderWidth: 1,
             },
           ],
@@ -133,7 +143,7 @@ const VerticalsPage = () => {
             data: verticalsArray.map(
               (v) => v.chains.filter((chain) => chain.da.includes(da)).length
             ),
-            backgroundColor: getColor(index),
+            backgroundColor: getDistinctColor(index),
           })),
         };
 
@@ -154,7 +164,29 @@ const VerticalsPage = () => {
               (v) =>
                 v.chains.filter((chain) => chain.l2OrL3.includes(l2l3)).length
             ),
-            backgroundColor: getColor(index + daCategories.length),
+            backgroundColor: getDistinctColor(index),
+          })),
+        };
+
+        // Prepare data for Frameworks per Vertical stacked bar chart
+        const frameworksSet = new Set(
+          verticalsArray.flatMap((v) =>
+            v.chains.map((chain) => chain.framework)
+          )
+        );
+        const frameworksArrayUnique = Array.from(frameworksSet).filter(
+          (fw) => fw !== "N/A"
+        );
+
+        const frameworksPerVerticalData = {
+          labels: verticalsArray.map((v) => v.vertical),
+          datasets: frameworksArrayUnique.map((framework, index) => ({
+            label: framework,
+            data: verticalsArray.map(
+              (v) =>
+                v.chains.filter((chain) => chain.framework === framework).length
+            ),
+            backgroundColor: getDistinctColor(index),
           })),
         };
 
@@ -163,6 +195,7 @@ const VerticalsPage = () => {
         setBarChartData(barData);
         setDaChartData(daData);
         setL2l3ChartData(l2l3Data);
+        setVerticalsFrameworksBarData(frameworksPerVerticalData);
         setLoading(false);
       } catch (err) {
         console.error("Error processing verticals data:", err);
@@ -174,57 +207,126 @@ const VerticalsPage = () => {
     processVerticalsData();
   }, []);
 
-  // Function to generate a color palette
+  // Function to generate a color palette with distinct colors
   const generateColorPalette = (numColors) => {
-    const colors = [];
-    const baseColors = [
-      "#FF6384",
-      "#36A2EB",
-      "#FFCE56",
-      "#4BC0C0",
-      "#9966FF",
-      "#FF9F40",
-      "#C9CBCF",
-      "#B3E5FC",
-      "#DCEDC8",
-      "#FFE0B2",
+    const colors = [
+      "#FF6633",
+      "#FF33FF",
+      "#00B3E6",
+      "#E6B333",
+      "#3366E6",
+      "#999966",
+      "#99FF99",
+      "#B34D4D",
+      "#80B300",
+      "#809900",
+      "#E6B3B3",
+      "#6680B3",
+      "#66991A",
+      "#FF99E6",
+      "#CCFF1A",
+      "#FF1A66",
+      "#E6331A",
+      "#33FFCC",
+      "#66994D",
+      "#B366CC",
+      "#4D8000",
+      "#B33300",
+      "#CC80CC",
+      "#66664D",
+      "#991AFF",
+      "#E666FF",
+      "#4DB3FF",
+      "#1AB399",
+      "#E666B3",
+      "#33991A",
+      "#CC9999",
+      "#B3B31A",
+      "#00E680",
+      "#4D8066",
+      "#809980",
+      "#E6FF80",
+      "#1AFF33",
+      "#999933",
+      "#FF3380",
+      "#CCCC00",
+      "#66E64D",
+      "#4D80CC",
+      "#9900B3",
+      "#E64D66",
+      "#4DB380",
+      "#FF4D4D",
+      "#99E6E6",
+      "#6666FF",
       // Add more colors if needed
     ];
-    for (let i = 0; i < numColors; i++) {
-      colors.push(baseColors[i % baseColors.length]);
-    }
-    return colors;
+    return colors.slice(0, numColors);
   };
 
-  // Function to get distinct colors for stacked bars
-  const getColor = (index) => {
-    const palette = [
-      "#FF6384",
-      "#36A2EB",
-      "#FFCE56",
-      "#4BC0C0",
-      "#9966FF",
-      "#FF9F40",
-      "#C9CBCF",
-      "#B3E5FC",
-      "#DCEDC8",
-      "#FFE0B2",
-      "#A8E6CF",
-      "#FFD3B6",
-      "#FFAAA5",
-      "#FF8C94",
-      "#8ECAE6",
-      "#2196F3",
-      "#FF6F61",
-      "#6B5B95",
-      "#88B04B",
-      "#F7CAC9",
+  // Function to get distinct colors for categories
+  const getDistinctColor = (index) => {
+    const colors = [
+      // Same color array as above
+      "#FF6633",
+      "#FF33FF",
+      "#00B3E6",
+      "#E6B333",
+      "#3366E6",
+      "#999966",
+      "#99FF99",
+      "#B34D4D",
+      "#80B300",
+      "#809900",
+      "#E6B3B3",
+      "#6680B3",
+      "#66991A",
+      "#FF99E6",
+      "#CCFF1A",
+      "#FF1A66",
+      "#E6331A",
+      "#33FFCC",
+      "#66994D",
+      "#B366CC",
+      "#4D8000",
+      "#B33300",
+      "#CC80CC",
+      "#66664D",
+      "#991AFF",
+      "#E666FF",
+      "#4DB3FF",
+      "#1AB399",
+      "#E666B3",
+      "#33991A",
+      "#CC9999",
+      "#B3B31A",
+      "#00E680",
+      "#4D8066",
+      "#809980",
+      "#E6FF80",
+      "#1AFF33",
+      "#999933",
+      "#FF3380",
+      "#CCCC00",
+      "#66E64D",
+      "#4D80CC",
+      "#9900B3",
+      "#E64D66",
+      "#4DB380",
+      "#FF4D4D",
+      "#99E6E6",
+      "#6666FF",
+      // Add more colors if needed
     ];
-    return palette[index % palette.length];
+    return colors[index % colors.length];
   };
 
   if (loading) {
-    return <div className="loading-message">Loading verticals data...</div>;
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading verticals data...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -235,7 +337,6 @@ const VerticalsPage = () => {
     <div className="verticals-page">
       <h2>Verticals Overview</h2>
       <div className="verticals-container">
-        {/* Left Side: Table */}
         <div className="verticals-table-container">
           <h3>Verticals and Top 5 Chains</h3>
           <table className="verticals-table">
@@ -260,65 +361,77 @@ const VerticalsPage = () => {
           </table>
         </div>
 
-        {/* Right Side: Pie Chart */}
         <div className="verticals-pie-chart-container">
           <h3>Distribution of Vertical Chains</h3>
-          <Pie data={pieChartData} />
+          <Pie
+            data={pieChartData}
+            options={{
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    color: "#fff",
+                  },
+                },
+                tooltip: {
+                  enabled: true,
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
+                },
+              },
+            }}
+          />
         </div>
       </div>
 
-      {/* Bar Chart Below */}
-      <div className="verticals-bar-chart-container">
-        <h3>Total Transactions per Vertical</h3>
-        <Bar
-          data={barChartData}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: {
-                display: false, // Hide legend if only one dataset
-              },
-              tooltip: {
-                enabled: true,
-              },
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: "Total Transactions",
-                  color: "#fff",
+      <div className="verticals-bar-charts-grid">
+        <div className="verticals-bar-chart-container">
+          <h3>Total Transactions per Vertical</h3>
+          <Bar
+            data={barChartData}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: false,
+                  labels: {
+                    color: "#fff",
+                  },
                 },
-                ticks: {
-                  color: "#fff",
-                },
-                grid: {
-                  color: "rgba(255, 255, 255, 0.1)",
+                tooltip: {
+                  enabled: true,
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
                 },
               },
-              x: {
-                title: {
-                  display: true,
-                  text: "Verticals",
-                  color: "#fff",
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Total Transactions",
+                    color: "#fff",
+                  },
+                  ticks: {
+                    color: "#fff",
+                  },
                 },
-                ticks: {
-                  color: "#fff",
-                },
-                grid: {
-                  color: "rgba(255, 255, 255, 0.1)",
+                x: {
+                  title: {
+                    display: true,
+                    text: "Verticals",
+                    color: "#fff",
+                  },
+                  ticks: {
+                    color: "#fff",
+                  },
                 },
               },
-            },
-          }}
-        />
-      </div>
+            }}
+          />
+        </div>
 
-      {/* Additional Bar Charts: DA and L2/L3 */}
-      <div className="additional-charts-container">
-        {/* DA Usage Bar Chart */}
-        <div className="additional-chart">
+        <div className="verticals-bar-chart-container">
           <h3>DA Usage per Vertical</h3>
           <Bar
             data={daChartData}
@@ -327,9 +440,14 @@ const VerticalsPage = () => {
               plugins: {
                 legend: {
                   position: "top",
+                  labels: {
+                    color: "#fff",
+                  },
                 },
                 tooltip: {
                   enabled: true,
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
                 },
               },
               scales: {
@@ -343,11 +461,9 @@ const VerticalsPage = () => {
                   ticks: {
                     color: "#fff",
                   },
-                  grid: {
-                    color: "rgba(255, 255, 255, 0.1)",
-                  },
                 },
                 x: {
+                  stacked: true,
                   title: {
                     display: true,
                     text: "Verticals",
@@ -356,17 +472,13 @@ const VerticalsPage = () => {
                   ticks: {
                     color: "#fff",
                   },
-                  grid: {
-                    color: "rgba(255, 255, 255, 0.1)",
-                  },
                 },
               },
             }}
           />
         </div>
 
-        {/* L2/L3 Usage Bar Chart */}
-        <div className="additional-chart">
+        <div className="verticals-bar-chart-container">
           <h3>L2/L3 Usage per Vertical</h3>
           <Bar
             data={l2l3ChartData}
@@ -375,9 +487,14 @@ const VerticalsPage = () => {
               plugins: {
                 legend: {
                   position: "top",
+                  labels: {
+                    color: "#fff",
+                  },
                 },
                 tooltip: {
                   enabled: true,
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
                 },
               },
               scales: {
@@ -391,11 +508,9 @@ const VerticalsPage = () => {
                   ticks: {
                     color: "#fff",
                   },
-                  grid: {
-                    color: "rgba(255, 255, 255, 0.1)",
-                  },
                 },
                 x: {
+                  stacked: true,
                   title: {
                     display: true,
                     text: "Verticals",
@@ -404,8 +519,52 @@ const VerticalsPage = () => {
                   ticks: {
                     color: "#fff",
                   },
-                  grid: {
-                    color: "rgba(255, 255, 255, 0.1)",
+                },
+              },
+            }}
+          />
+        </div>
+
+        <div className="verticals-bar-chart-container">
+          <h3>Frameworks per Vertical</h3>
+          <Bar
+            data={verticalsFrameworksBarData}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "top",
+                  labels: {
+                    color: "#fff",
+                  },
+                },
+                tooltip: {
+                  enabled: true,
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Number of Frameworks",
+                    color: "#fff",
+                  },
+                  ticks: {
+                    color: "#fff",
+                  },
+                },
+                x: {
+                  stacked: true,
+                  title: {
+                    display: true,
+                    text: "Verticals",
+                    color: "#fff",
+                  },
+                  ticks: {
+                    color: "#fff",
                   },
                 },
               },

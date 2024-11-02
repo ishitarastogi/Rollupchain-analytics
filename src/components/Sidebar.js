@@ -39,7 +39,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/framework" className="subcategory-link">
+            <Link to="/frameworks" className="subcategory-link">
               Framework
             </Link>
           </li>

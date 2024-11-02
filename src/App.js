@@ -18,16 +18,16 @@ function App() {
         <Sidebar />
         <div className="main-content">
           {/* Header Card */}
-          <HeaderBox
-            title="Rollup Terminal"
-            description="Welcome to the Rollup Terminal. Here you can monitor weekly transactions and explore detailed analytics."
-          />
 
           <Routes>
             <Route
               path="/"
               element={
                 <>
+                  <HeaderBox
+                    title="Rollup Explorer"
+                    description="Welcome to the Rollup Explorer to understand appchain trends."
+                  />
                   <WeeklyTransactionsChart />
                   <Table />
                 </>
